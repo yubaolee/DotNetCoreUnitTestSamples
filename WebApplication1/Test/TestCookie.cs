@@ -19,9 +19,9 @@ namespace WebApplication1.Test
             var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
             httpContextAccessorMock.Setup(x => x.HttpContext.Request.Cookies["username"]).Returns("yubaolee");
 
-            //services.AddScoped(x => httpContextAccessorMock.Object);
-
-            var server = new TestServer(WebHost.CreateDefaultBuilder().UseStartup<Startup>());
+            var server = new TestServer(WebHost.CreateDefaultBuilder()
+                .ConfigureServices(u =>u.AddScoped(x =>httpContextAccessorMock.Object))
+                .UseStartup<Startup>());
             _service = server.Host.Services.GetService<UserService>();
         }
         [Test]

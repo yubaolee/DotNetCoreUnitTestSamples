@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,11 @@ namespace WebApplication1
         {
             services.AddMvc().AddControllersAsServices().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddScoped<UserService>();
-            services.AddScoped(typeof(IHttpContextAccessor), typeof(HttpContextAccessor));
+
+            if (services.All(u => u.ServiceType != typeof(IHttpContextAccessor)))
+            {
+                services.AddScoped(typeof(IHttpContextAccessor), typeof(HttpContextAccessor));
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
